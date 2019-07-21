@@ -11,11 +11,11 @@ import org.apache.commons.lang3.StringUtils;
 
 public class PerCapitaCalculator {
 
-  public TreeMap<String, TreeMap<String, Double>> calculatePerCapitaIncome(List<Income> incomes) {
-    HashMap<String, HashMap<String, List<Double>>> countryOrCityGenderIncomes = new HashMap<>();
+  public Map<String, Map<String, Double>> calculatePerCapitaIncome(List<Income> incomes) {
+    Map<String, Map<String, List<Double>>> countryOrCityGenderIncomes = new HashMap<>();
 
     for (Income income : incomes) {
-      HashMap<String, List<Double>> genderIncomes = new HashMap<>();
+      Map<String, List<Double>> genderIncomes = new HashMap<>();
       List<Double> incomeList = new ArrayList<>();
 
       String cityOrCountry =
@@ -36,12 +36,12 @@ public class PerCapitaCalculator {
       }
     }
 
-    TreeMap<String, TreeMap<String, Double>> countryOrCityGenderAvgIncomes = new TreeMap<>();
-    for (Map.Entry<String, HashMap<String, List<Double>>> entry : countryOrCityGenderIncomes
+    Map<String, Map<String, Double>> countryOrCityGenderAvgIncomes = new TreeMap<>();
+    for (Map.Entry<String, Map<String, List<Double>>> entry : countryOrCityGenderIncomes
         .entrySet()) {
-      TreeMap<String, Double> perGenderAvgIncome = new TreeMap<>();
+      Map<String, Double> perGenderAvgIncome = new TreeMap<>();
       String cityOrCountry = entry.getKey();
-      HashMap<String, List<Double>> genderIncomes = entry.getValue();
+      Map<String, List<Double>> genderIncomes = entry.getValue();
       for (Map.Entry<String, List<Double>> genderIncome : genderIncomes.entrySet()) {
         String gender = genderIncome.getKey();
         Double avgIncomePerGender = getAvgIncome(genderIncome.getValue());

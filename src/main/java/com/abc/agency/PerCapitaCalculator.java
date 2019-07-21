@@ -12,8 +12,42 @@ import org.apache.commons.lang3.StringUtils;
 public class PerCapitaCalculator {
 
   public Map<String, Map<String, Double>> calculatePerCapitaIncome(List<Income> incomes) {
-    Map<String, Map<String, List<Double>>> countryOrCityGenderIncomes = new HashMap<>();
+    Map<String, Map<String, List<Double>>> countryOrCityGenderIncomes =
+        calculateCityOrCountryGenderIncomeList(incomes);
 
+    Map<String, Map<String, Double>> countryOrCityGenderAvgIncomes =
+        calculateCityOrCountryGenderAvgIncome(countryOrCityGenderIncomes);
+
+    System.out.println(countryOrCityGenderAvgIncomes);
+    return countryOrCityGenderAvgIncomes;
+  }
+
+  private Map<String, Map<String, Double>> calculateCityOrCountryGenderAvgIncome(
+      Map<String, Map<String, List<Double>>> countryOrCityGenderIncomes) {
+    Map<String, Map<String, Double>> countryOrCityGenderAvgIncomes = new TreeMap<>();
+    for (Map.Entry<String, Map<String, List<Double>>> entry : countryOrCityGenderIncomes
+        .entrySet()) {
+      Map<String, Double> perGenderAvgIncome = new TreeMap<>();
+      String cityOrCountry = entry.getKey();
+      Map<String, List<Double>> genderIncomes = entry.getValue();
+      for (Map.Entry<String, List<Double>> genderIncome : genderIncomes.entrySet()) {
+        String gender = genderIncome.getKey();
+        Double avgIncomePerGender = getAvgIncome(genderIncome.getValue());
+        if (countryOrCityGenderAvgIncomes.containsKey(cityOrCountry)) {
+          perGenderAvgIncome = countryOrCityGenderAvgIncomes.get(cityOrCountry);
+          perGenderAvgIncome.put(gender, avgIncomePerGender);
+        } else {
+          perGenderAvgIncome.put(gender, avgIncomePerGender);
+          countryOrCityGenderAvgIncomes.put(cityOrCountry, perGenderAvgIncome);
+        }
+      }
+    }
+    return countryOrCityGenderAvgIncomes;
+  }
+
+  private Map<String, Map<String, List<Double>>> calculateCityOrCountryGenderIncomeList(
+      List<Income> incomes) {
+    Map<String, Map<String, List<Double>>> countryOrCityGenderIncomes = new HashMap<>();
     for (Income income : incomes) {
       Map<String, List<Double>> genderIncomes = new HashMap<>();
       List<Double> incomeList = new ArrayList<>();
@@ -35,28 +69,7 @@ public class PerCapitaCalculator {
         countryOrCityGenderIncomes.put(cityOrCountry, genderIncomes);
       }
     }
-
-    Map<String, Map<String, Double>> countryOrCityGenderAvgIncomes = new TreeMap<>();
-    for (Map.Entry<String, Map<String, List<Double>>> entry : countryOrCityGenderIncomes
-        .entrySet()) {
-      Map<String, Double> perGenderAvgIncome = new TreeMap<>();
-      String cityOrCountry = entry.getKey();
-      Map<String, List<Double>> genderIncomes = entry.getValue();
-      for (Map.Entry<String, List<Double>> genderIncome : genderIncomes.entrySet()) {
-        String gender = genderIncome.getKey();
-        Double avgIncomePerGender = getAvgIncome(genderIncome.getValue());
-        if (countryOrCityGenderAvgIncomes.containsKey(cityOrCountry)) {
-          perGenderAvgIncome = countryOrCityGenderAvgIncomes.get(cityOrCountry);
-          perGenderAvgIncome.put(gender, avgIncomePerGender);
-        } else {
-          perGenderAvgIncome.put(gender, avgIncomePerGender);
-          countryOrCityGenderAvgIncomes.put(cityOrCountry, perGenderAvgIncome);
-        }
-      }
-    }
-
-    System.out.println(countryOrCityGenderAvgIncomes);
-    return countryOrCityGenderAvgIncomes;
+    return countryOrCityGenderIncomes;
   }
 
   private Double getCurrencyConversionRate(Income income) {

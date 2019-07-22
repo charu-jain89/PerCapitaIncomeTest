@@ -1,5 +1,7 @@
 package com.abc.agency;
 
+import static com.abc.agency.utils.PerCapitaUtil.isNullOrEmpty;
+
 import com.abc.agency.model.Income;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -7,11 +9,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import org.apache.commons.lang3.StringUtils;
 
 public class PerCapitaCalculator {
 
   public Map<String, Map<String, Double>> calculatePerCapitaIncome(List<Income> incomes) {
+    if (isNullOrEmpty(incomes)) {
+      return null;
+    }
     Map<String, Map<String, List<Double>>> countryOrCityGenderIncomes =
         calculateCityOrCountryGenderIncomeList(incomes);
 
@@ -53,7 +57,7 @@ public class PerCapitaCalculator {
       List<Double> incomeList = new ArrayList<>();
 
       String cityOrCountry =
-          StringUtils.isNotBlank(income.getCountry()) ? income.getCountry() : income.getCity();
+          !isNullOrEmpty(income.getCountry()) ? income.getCountry() : income.getCity();
       if (countryOrCityGenderIncomes.containsKey(cityOrCountry)) {
         genderIncomes = countryOrCityGenderIncomes.get(cityOrCountry);
         if (genderIncomes.containsKey(income.getGender().getValue())) {

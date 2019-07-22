@@ -3,8 +3,8 @@ package com.abc.agency.reader;
 import com.abc.agency.model.Currency;
 import com.abc.agency.model.Gender;
 import com.abc.agency.model.Income;
-import com.abc.agency.utils.PerCapitaConstant;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -12,12 +12,12 @@ import java.util.List;
 
 public class CSVReader implements InputReader {
 
-  public List<Income> readInputFile(String filePath) {
+  public List<Income> readInputFile(File file) {
     BufferedReader bufferedReader = null;
     try {
       List<Income> incomes = new ArrayList<>();
       bufferedReader = new BufferedReader(
-          new FileReader(PerCapitaConstant.input_csv));
+          new FileReader(file));
       bufferedReader.readLine();//read header of csv file
 
       String line = "";
